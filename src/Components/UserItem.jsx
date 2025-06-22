@@ -11,11 +11,12 @@ const UserItem = (props) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(props.details.name);
   const [email, setEmail] = useState(props.details.email);
+  const [contact, setContact] = useState(props.details.contact);
 
   // Optional: Reset inputs when dialog opens
   
   const handleEdit = ()=>{
-    let edit ={name:name,email:email}
+    let edit ={name:name,email:email,contact:contact}
     let newDetails={...props.details,...edit}
      props.editUser(props.details.id,newDetails)
      setOpen(false)
@@ -59,7 +60,7 @@ const UserItem = (props) => {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="mt-1 w-full rounded-md border px-4 py-2 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                    className="mt-1 w-full rounded-md  px-4 py-2 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                   />
                 </div>
                 <div>
@@ -68,7 +69,16 @@ const UserItem = (props) => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="mt-1 w-full rounded-md border px-4 py-2 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                    className="mt-1 w-full rounded-md  px-4 py-2 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Contact</label>
+                  <input
+                    type="contact"
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    className="mt-1 w-full rounded-md  px-4 py-2 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                   />
                 </div>
               </div>

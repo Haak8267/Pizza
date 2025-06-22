@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 const EditUserForm = ({ onSave }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [contact, setContact] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent page refresh
-    const updatedUser = { name, email };
+    const updatedUser = { name, email, contact };
     onSave(updatedUser);    // Save the edited data (via props or API)
   };
 
@@ -25,6 +26,14 @@ const EditUserForm = ({ onSave }) => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
+        className="w-full mb-3 p-2 border"
+      />
+
+<input
+        type="contact"
+        value={contact}
+        onChange={(e) => setContact(e.target.value)}
+        placeholder="Contact"
         className="w-full mb-3 p-2 border"
       />
 
