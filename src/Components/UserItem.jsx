@@ -1,108 +1,59 @@
-import { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  DialogTitle
-} from '@headlessui/react';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+// 
 
-const UserItem = (props) => {
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState(props.details.name);
-  const [email, setEmail] = useState(props.details.email);
-  const [contact, setContact] = useState(props.details.contact);
+import React, { useState } from 'react'
+import  useTodoStore from '../store/useTodoStore'
+import { Pencil, Trash2, Save, CheckCircle } from 'lucide-react'
 
-  // Optional: Reset inputs when dialog opens
-  
-  const handleEdit = ()=>{
-    let edit ={name:name,email:email,contact:contact}
-    let newDetails={...props.details,...edit}
-     props.editUser(props.details.id,newDetails)
-     setOpen(false)
-   }
+const UserItem = ({ todo }) => {
+  const { toggleTodo, deleteTodo, updateTodo } = useTodoStore()
+  const [isEditing, setIsEditing] = useState(false)
+  const [newText, setNewText] = useState(todo.text)
+
+  const handleSave = () => {
+    if (!newText.trim()) return
+    updateTodo(todo.id, newText)
+    setIsEditing(false)
+  }
 
   return (
-    <div className="flex items-center justify-between p-4 mb-4 bg-gradient-to-br from-white via-slate-50 to-slate-200 rounded-2xl shadow-2xl transition-shadow duration-300">
-      <div>
-        <h3 className="text-lg font-bold text-gray-800">{props.details.name}</h3>
-        <p className="text-sm text-gray-500">{props.details.email}</p>
-        <p className="text-sm text-gray-500">{props.details.contact}</p>
-      </div>
+    <li className="flex items-center justify-between bg-gray-100 p-3 rounded-md shadow-sm">
+      {isEditing ? (
+        <>
+          <input
+            className="flex-1 mr-4 px-2 py-1 border rounded-md"
+            value={newText}
+            onChange={(e) => setNewText(e.target.value)}
+          />
+          <button onClick={handleSave} className="text-sky-700 mr-4">
+            <Save size={20} />
+          </button>
+        </>
+      ) : (
+        <>
+          <span
+            onClick={() => toggleTodo(todo.id)}
+            className={`flex-1 cursor-pointer flex items-center gap-2 ${
+              todo.completed ? 'line-through text-gray-400' : 'text-gray-800'
+            }`}
+          >
+            <CheckCircle
+              size={20}
+              className={`${
+                todo.completed ? 'text-sky-700' : 'text-gray-300'
+              }`}
+            />
+            {todo.text}
+          </span>
+          <button onClick={() => setIsEditing(true)} className="text-slate-900 ml-9">
+            <Pencil size={20} />
+          </button>
+          <button onClick={() => deleteTodo(todo.id)} className="text-red-600">
+            <Trash2 size={20} />
+          </button>
+        </>
+      )}
+    </li>
+  )
+}
 
-      <div className="flex gap-2">
-        <button
-          className="bg-sky-500 text-white px-4 py-2 rounded-xl hover:bg-sky-600 transition"
-          onClick={() => setOpen(true)}
-        >
-          Edit
-        </button>
-        <button 
-        onClick={()=>props.deleteUser(props.details.id)}
-        className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition">
-          Delete
-        </button>
-      </div>
-
-      <Dialog open={open} onClose={() => setOpen(false)} className="relative z-10">
-        <DialogBackdrop className="fixed inset-0 bg-black/30" />
-
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4">
-            <DialogPanel className="bg-white rounded-xl p-6 shadow-xl w-full max-w-md">
-              <DialogTitle className="text-lg font-semibold text-gray-900 mb-4">
-                Edit User
-              </DialogTitle>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Name</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="mt-1 w-full rounded-md  px-4 py-2 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="mt-1 w-full rounded-md  px-4 py-2 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Contact</label>
-                  <input
-                    type="contact"
-                    value={contact}
-                    onChange={(e) => setContact(e.target.value)}
-                    className="mt-1 w-full rounded-md  px-4 py-2 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end gap-2">
-                <button
-                  onClick={handleEdit}
-                  className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500"
-                >
-                  Save Changes
-                </button>
-                <button
-                  onClick={() => setOpen(false)}
-                  className="bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300"
-                >
-                  Cancel
-                </button>
-              </div>
-            </DialogPanel>
-          </div>
-        </div>
-      </Dialog>
-    </div>
-  );
-};
-
-export default UserItem;
+export default UserItem

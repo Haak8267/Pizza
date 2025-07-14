@@ -1,16 +1,26 @@
-import React from 'react';
-import UserItem from './UserItem';
+import React from 'react'
+import  useTodoStore  from "../store/useTodoStore"
+import UserItem from './UserItem'
 
-const UserList = (props) => {
+const UserList = () => {
+  const todos = useTodoStore((state) => state.todos)
+
+  if (todos.length === 0) return <p className="text-gray-500">No todos yet.</p>
+
   return (
-    <div className="p-4 space-y-2 bg-gradient-to-br from-white via-slate-50 to-slate-600 rounded-2xl shadow-inner">
-      <h2 className="mb-4 text-center text-3xl font-semibold text-slate-800">User List</h2>
-      {props.usersList.map((user) => (
-        <UserItem key={user.id} details={user}  editUser={props.editedUser}
-        deleteUser={props.deletedUser} />
-      ))}
-    </div>
-  );
-};
+    <ul className="space-y-4 px-4 py-2">
+    {todos.map((todo) => (
+      <li
+        key={todo.id}
+        className="bg-white bg-opacity-90 rounded-xl p-2 shadow-md hover:shadow-lg 
+        transition-all border border-slate-200 flex  justify-between"
+      >
+        <UserItem todo={todo} />
+      </li>
+    ))}
+  </ul>
+  
+  )
+}
 
-export default UserList;
+export default UserList
